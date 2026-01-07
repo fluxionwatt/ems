@@ -3,14 +3,14 @@ ARG TARGETARCH
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:8080/health || exit 1
 
-RUN mkdir -p /var/log/manager /var/lib/manager/data /var/lib/manager/extra /var/lib/gridbeat/plugins
+RUN mkdir -p /var/log/ems /var/lib/ems/data /var/lib/ems/extra
 
-COPY linux/${TARGETARCH}/manager /manager
+COPY linux/${TARGETARCH}/ems /ems
 #COPY plugins/*.so /usr/lib/gridbeat/plugins/
 
-VOLUME /var/log/manager /var/lib/manager/data /var/lib/manager/extra
+VOLUME /var/log/ems /var/lib/ems/data /var/lib/ems/extra
 
 EXPOSE 8080
 
-RUN  chmod +x /manager
-CMD ["/manager"]
+RUN  chmod +x /ems
+CMD ["/ems", "server"]

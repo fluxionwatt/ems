@@ -1,0 +1,31 @@
+debug: false
+log-path: /var/log/gridbeat
+data-path: /var/lib/gridbeat/data
+extra-path: /var/lib/gridbeat/extra
+plugins: /usr/lib/gridbeat/plugins
+pid: /run/gridbeat.pid
+
+mqtt:
+    port: 1883
+    host: localhost
+http:
+    port: 8080
+    redirect_https: false
+https:
+    disable: false
+    port: 8443
+auth:
+  jwt:
+    # IMPORTANT: change this in production
+    # 重要：生产环境务必修改
+    secret: "change-me"
+    issuer: "gridbeat"
+  web:
+    # Web session idle timeout in minutes (sliding)
+    # Web 会话空闲超时时间（分钟，滑动更新）
+    idle_minutes: 30
+
+audit:
+  # Audit log retention days (auto-clean, no delete API)
+  # 审计日志保留天数（自动清理，不提供删除 API）
+  retention_days: 120

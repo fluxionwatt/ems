@@ -1,0 +1,21 @@
+[Unit]
+Description=FluxionWatt data acquisition and monitoring Agent
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+PIDFile=/run/ems.pid
+Environment="conffile=/etc/ems/ems.yaml"
+EnvironmentFile=-/etc/sysconfig/ems
+ExecStart=/usr/sbin/ems server -c ${conffile}
+ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /run/ems.pid)"
+Restart=always
+RestartSec=30s
+Restart=on-failure
+LimitNOFILE=65536
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target

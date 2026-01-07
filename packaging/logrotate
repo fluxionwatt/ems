@@ -1,0 +1,12 @@
+/var/log/ems/*.log {
+    daily
+    rotate 7
+    compress
+    missingok
+    dateext
+    dateformat .%Y%m%d
+    sharedscripts
+    postrotate
+        kill -USR1 `cat /run/ems.pid`
+    endscript
+}
