@@ -1,0 +1,141 @@
+---
+- name: 在线部署 K8s 1.35 (Rocky Linux 10)
+  hosts: "*"
+  become: yes
+  vars:
+    k8s_version: "1.35.0"
+    pod_cidr: "10.244.0.0/16"
+    # 使用国内镜像源防止 init 卡住
+    image_repo: "registry.cn-hangzhou.aliyuncs.com/google_containers"
+
+  tasks:
+    # --- 1. 系统初始化 ---
+    - name: 禁用 Firewalld
+      service:
+        name: firewalld
+        state: stopped
+        enabled: no
+
+    - name: 禁用 SELinux
+      selinux:
+        state: permissive
+        policy: targeted
+
+    - name: 关闭 Swap
+      shell: |
+        swapoff -a
+        sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+      when: ansible_facts['swaptotal_mb'] > 0
+      changed_when: false
+
+    - name: 加载内核模块
+      modprobe:
+        name: "{{ item }}"
+        state: present
+      loop: [overlay, br_netfilter]
+
+    - name: 配置 sysctl 参数
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        sysctl_file: /etc/sysctl.d/k8s.conf
+      loop:
+        - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+        - { key: 'net.ipv4.ip_forward', value: '1' }
+        - { key: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+
+    # --- 2. 软件源与安装 ---
+    - name: 添加 Kubernetes 仓库
+      yum_repository:
+        name: kubernetes
+        description: Kubernetes
+        baseurl: https://pkgs.k8s.io/core:/stable:/v1.35/rpm/
+        gpgcheck: yes
+        gpgkey: https://pkgs.k8s.io/core:/stable:/v1.35/rpm/repodata/repomd.xml.key
+        enabled: yes
+
+    - name: 安装基础包与 K8s 组件
+      dnf:
+        name:
+          - tar
+          - socat
+          - conntrack
+          - iproute-tc
+          - containerd.io
+          - kubelet-{{ k8s_version }}
+          - kubeadm-{{ k8s_version }}
+          - kubectl-{{ k8s_version }}
+        state: present
+        disable_excludes: kubernetes
+
+    # --- 3. Containerd 深度配置 (解决连接拒绝问题) ---
+    - name: 确保 containerd 配置目录存在
+      file:
+        path: /etc/containerd
+        state: directory
+
+    - name: 重置并配置 containerd
+      shell: |
+        containerd config default > /etc/containerd/config.toml
+        sed -i 's/disabled_plugins = \["cri"\]/disabled_plugins = []/g' /etc/containerd/config.toml
+        sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+      notify: Restart Containerd
+
+    - name: 立即启动 containerd
+      meta: flush_handlers
+
+    - name: 确保 containerd 正在运行
+      service:
+        name: containerd
+        state: started
+        enabled: yes
+
+    # --- 4. 集群初始化 (重入逻辑) ---
+    - name: 检查集群是否已初始化
+      stat:
+        path: /etc/kubernetes/admin.conf
+      register: kube_admin_conf
+
+    - name: 预拉取 K8s 镜像 (防止超时)
+      command: >
+        kubeadm config images pull 
+        --kubernetes-version=v{{ k8s_version }}
+        --image-repository {{ image_repo }}
+      when: not kube_admin_conf.stat.exists
+
+    - name: 执行 kubeadm init
+      command: >
+        kubeadm init 
+        --kubernetes-version=v{{ k8s_version }} 
+        --pod-network-cidr={{ pod_cidr }} 
+        --image-repository {{ image_repo }}
+        --ignore-preflight-errors=all
+      when: not kube_admin_conf.stat.exists
+
+    - name: 配置 kubectl 环境
+      shell: |
+        mkdir -p /root/.kube
+        cp /etc/kubernetes/admin.conf /root/.kube/config
+        chmod 600 /root/.kube/config
+      when: not kube_admin_conf.stat.exists
+
+    # --- 5. 单机适配 ---
+    - name: 检查节点污点
+      command: kubectl describe node {{ ansible_facts['hostname'] | lower }}
+      register: node_info
+      changed_when: false
+
+    - name: 移除 Master 污点以支持单机运行 Pod
+      command: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+      when: "'NoSchedule' in node_info.stdout"
+
+    - name: 安装 Flannel 网络
+      command: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+      changed_when: false
+
+  handlers:
+    - name: Restart Containerd
+      service:
+        name: containerd
+        state: restarted

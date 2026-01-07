@@ -1,0 +1,36 @@
+---
+- name: 安装系统基础软件包
+  hosts: "*"
+  become: yes
+  vars:
+    # 定义需要安装的软件包列表
+    common_packages:
+      - tar
+      - gzip
+      - bzip2
+      - curl
+      - wget
+      - vim-enhanced
+      - net-tools
+      - bash-completion
+      - openssl
+
+  tasks:
+    - name: 更新 dnf 缓存 (仅限 Rocky/CentOS/RHEL)
+      dnf:
+        update_cache: yes
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: 确保基础软件包已安装
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ common_packages }}"
+      register: pkg_result
+
+    - name: 打印安装状态
+      debug:
+        msg: "软件包 {{ item.item }} 状态: {{ '已安装/已更新' if item.changed else '已存在' }}"
+      loop: "{{ pkg_result.results }}"
+      # 修正：判断 pkg_result 是否包含 results 列表
+      when: pkg_result.results is defined

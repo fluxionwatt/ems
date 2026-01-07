@@ -1,0 +1,39 @@
+version: 2
+
+project_name: manager
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/fluxionwatt/manager/version.Version={{ .Version }} -X github.com/fluxionwatt/manager/version.CommitSHA={{ .ShortCommit }}
+    main: main.go
+    binary: manager
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+    ignore:
+      - goos: darwin
+        goarch: amd64
+
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Version }}-{{.Os}}-{{.Arch}}{{if .Arm}}v{{.Arm}}{{end}}"
+    formats: ["tar.gz"]
+    format_overrides:
+      - goos: windows
+        formats: ["zip"]
+    files:
+      - none*
+    wrap_in_directory: true
+
+dockers_v2:
+  - id: myapp
+    dockerfile: docker/Dockerfile
+    images:
+      - fluxionwatt/manager
+    tags:
+      - "v{{ .Version }}"
+      - "{{ if not .Prerelease }}latest{{ end }}"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
