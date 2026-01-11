@@ -1,0 +1,95 @@
+version: 2
+
+project_name: ems
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/fluxionwatt/ems/version.Version={{ .Version }} -X github.com/fluxionwatt/ems/version.CommitSHA={{ .ShortCommit }}
+    main: main.go
+    binary: ems
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+    ignore:
+      - goos: darwin
+        goarch: amd64
+
+nfpms:
+  - id: rpm
+    package_name: ems
+    file_name_template: >-
+      {{ .ProjectName }}-{{ .Version }}-{{- if eq .Arch "amd64" -}}x86_64{{- else if eq .Arch "arm64" -}}aarch64{{- else -}}{{ .Arch }}{{- end -}}
+    homepage: https://www.fluxionwatt.com
+    maintainer: "fluxionwatt Team <opentruenvr@gmail.com>"
+    description: "GridBeat industrial gateway & energy orchestration service."
+    license: Apache-2.0
+    formats:
+      - rpm
+      - deb
+    dependencies:
+      - logrotate
+    bindir: /usr/sbin
+    scripts:
+      postinstall: packaging/postinstall.sh
+      preremove: packaging/preremove.sh
+    contents:
+      - src: "./packaging/cron.daily"
+        dst: "/etc/cron.daily/ems"
+      - src: "./packaging/systemd"
+        dst: "/usr/lib/systemd/system/ems.service"
+      - src: "./packaging/logrotate"
+        dst: "/etc/logrotate.d/ems"
+      - src: "./packaging/default"
+        dst: "/etc/sysconfig/ems"
+      - src: "./config/ems-nfpm.yaml"
+        dst: "/etc/ems/ems.yaml"
+        type: config
+      - dst: /var/lib/ems
+        type: dir
+        file_info:
+          mode: 0755
+          owner: root
+          group: root
+      - dst: /var/log/ems
+        type: dir
+        file_info:
+          mode: 0755
+          owner: root
+          group: root
+      - dst: /var/lib/ems/data
+        type: dir
+        file_info:
+          mode: 0755
+          owner: root
+          group: root
+      - dst: /var/lib/ems/extra
+        type: dir
+        file_info:
+          mode: 0755
+          owner: root
+          group: root
+
+
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Version }}-{{.Os}}-{{.Arch}}{{if .Arm}}v{{.Arm}}{{end}}"
+    formats: ["tar.gz"]
+    format_overrides:
+      - goos: windows
+        formats: ["zip"]
+    files:
+      - none*
+    wrap_in_directory: true
+
+dockers_v2:
+  - id: myapp
+    dockerfile: docker/Dockerfile
+    images:
+      - fluxionwatt/ems
+    tags:
+      - "v{{ .Version }}"
+      - "{{ if not .Prerelease }}latest{{ end }}"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
