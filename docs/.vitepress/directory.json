@@ -1,0 +1,357 @@
+{
+  "cn": [
+    {
+      "title": "为什么选择 Manager",
+      "path": "index"
+    },
+    {
+      "title": "快速入门",
+      "path": "quick_start/quick_start",
+      "collapsed": false,
+      "children": [
+        {
+          "title": "安装对接设备",
+          "path": "quick_start/quick_start"
+        },
+        {
+          "title": "实战教程",
+          "path": "quick_start/step-by-step-guide"
+        }
+      ]
+    },
+    {
+      "title": "系统介绍",
+      "path": "introduction/design_ideas",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "设计理念",
+          "path": "introduction/design_ideas"
+        },
+        {
+          "title": "相关概念",
+          "path": "introduction/concepts"
+        },
+        {
+          "title": "应用场景",
+          "path": "introduction/application_scenarios"
+        },
+        {
+          "title": "功能介绍",
+          "path": "introduction/functions"
+        },
+        {
+          "title": "性能测试报告",
+          "path": "introduction/test_report"
+        },
+        {
+          "title": "演示平台",
+          "path": "introduction/demo"
+        },
+        {
+          "title": "系统截图",
+          "path": "introduction/screenshots"
+        },
+        {
+          "title": "系统架构",
+          "path": "introduction/architecture"
+        },
+        {
+          "title": "更新记录",
+          "path": "introduction/releases"
+        },
+        {
+          "title": "三级等保",
+          "path": "introduction/third_class_insurance"
+        }
+      ]
+    },
+    {
+      "title": "安装",
+      "path": "installation/environmental_requirement",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "环境要求",
+          "path": "installation/environmental_requirement"
+          },
+        {
+          "title": "Docker方式安装",
+          "path": "installation/docker_installation"
+        },
+        {
+          "title": "TDengine 数据库部署",
+          "path": "installation/multidb/tdengine"
+        },
+        {
+          "title": "源码安装",
+          "path": "installation/source-code-installation"
+          },
+        {
+          "title": "树莓派源码安装",
+          "path": "installation/raspberry_installation"
+        },
+        {
+          "title": "集群部署",
+          "path": "installation/cluster_deploy"
+        },
+        {
+          "title": "优化指南",
+          "path": "installation/optimization"
+          },
+        {
+          "title": "系统升级指南",
+          "path": "installation/system_upgrade"
+        }
+      ]
+    },
+    {
+      "title": "设备接入",
+      "path": "device-connect/overview",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "设备接入概览",
+          "path": "device-connect/overview"
+        },
+        {
+          "title": "MQTT直连设备接入",
+          "path": "device-connect/mqtt"
+        },
+        {
+          "title": "MQTT网关设备接入",
+          "path": "device-connect/gateway"
+        },
+        {
+          "title": "非官方标准MQTT协议设备接入",
+          "path": "device-connect/non_standard_access"
+        },
+        {
+          "title": "Modbus TCP直连接入",
+          "path": "device-connect/modbus-tcp-direct"
+        },
+        {
+          "title": "ModBus RTU接入",
+          "path": "device-connect/modbus"
+        }
+      ]
+    },
+    {
+      "title": "运维指南",
+      "path": "user-guide/system-admin-operation-manual/home",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "设备接入服务管理",
+          "path": "user-guide/system-admin-operation-manual/plugin-managment/plugin-management"
+        },
+        {
+          "title": "可视化看板",
+          "path": "user-guide/system-admin-operation-manual/visualization/visualization-kanban"
+        },
+        {
+          "title": "租户管理",
+          "path": "user-guide/system-admin-operation-manual/system-managment/tenant-management"
+        },
+        {
+          "title": "系统设置",
+          "path": "user-guide/system-admin-operation-manual/system-managment/system_settings"
+        },
+        {
+          "title": "菜单管理",
+          "path": "user-guide/system-admin-operation-manual/system-managment/menu_settings"
+        },
+        {
+          "title": "通知管理",
+          "path": "user-guide/system-admin-operation-manual/system-managment/notice_settings"
+        }
+      ]
+    },
+    {
+      "title": "开发指南",
+      "path": "developer-guide/devEnv",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "开发环境",
+          "path": "developer-guide/devEnv"
+        },
+        {
+          "title": "菜单和页面",
+          "path": "developer-guide/devPage"
+        }
+      ]
+    }
+  ],
+  "en": [
+    {
+      "title": "Introduction",
+      "path": "./",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "Architecture",
+          "path": "introduction/architecture/architecture"
+        },
+        {
+          "title": "Plugin List",
+          "path": "introduction/plugin-list/plugin-list"
+        },
+        {
+          "title": "License Policy",
+          "path": "introduction/license/license-policy"
+        }
+      ]
+    },
+    {
+      "title": "Quick Start",
+      "path": "quick-start/quick-start"
+    },
+    {
+      "title": "Installation",
+      "path": "installation/installation",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "Installing GridBeat",
+          "path": "installation/gridbeat",
+          "children": [
+            {
+              "title": "Ubuntu/Debian",
+              "path": "installation/deb"
+            },
+            {
+              "title": "CentOS",
+              "path": "installation/rpm"
+            },
+            {
+              "title": "Other Linux",
+              "path": "installation/other-linux"
+            },
+            {
+              "title": "Docker",
+              "path": "installation/docker"
+            },
+            {
+              "title": "Source",
+              "path": "installation/compile"
+            }
+          ]
+        },
+        {
+          "title": "Installing and Activating License",
+          "path": "installation/license-install/license-install"
+        },
+        {
+          "title": "FAQ and Troubleshooting",
+          "path": "installation/faq/faq"
+        }
+      ]
+    },
+    {
+      "title": "Operations Guide",
+      "path": "admin/admin",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "Data Monitoring and Device Control",
+          "path": "admin/monitoring"
+        },
+        {
+          "title": "Data Statistics",
+          "path": "admin/data-statistics"
+        },
+        {
+          "title": "Log Management",
+          "path": "admin/log-management"
+        },
+        {
+          "title": "Configuration Management",
+          "path": "admin/conf-management"
+        }
+      ]
+    },
+    {
+      "title": "Development Guide",
+      "path": "dev-guide/dev-guide",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "SDK Tutorial",
+          "path": "dev-guide/sdk-tutorial/sdk-tutorial",
+          "children": [
+            {
+              "title": "Modbus Plugin Example",
+              "path": "dev-guide/sdk-tutorial/sdk-example/modbus-example"
+            },
+            {
+              "title": "MQTT Application Example",
+              "path": "dev-guide/sdk-tutorial/sdk-example/mqtt-example"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Use Cases",
+      "path": "use-cases/use-cases",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "Industrial Connectivity",
+          "path": "use-cases/connectivity/connectivity"
+        },
+        {
+          "title": "Edge Processing",
+          "path": "use-cases/edge/edge"
+        },
+        {
+          "title": "Sparkplug Solution",
+          "path": "use-cases/sparkplug/sparkplug"
+        },
+        {
+          "title": "Unified Namespace",
+          "path": "use-cases/uns/uns"
+        }
+      ]
+    },
+    {
+      "title": "Eco Partners",
+      "path": "ecopartners/eco",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "3 One Data",
+          "path": "ecopartners/3onedata/3onedata"
+        },
+        {
+          "title": "Smart Device Technology",
+          "path": "ecopartners/smdt/smdt"
+        }
+      ]
+    },
+    {
+      "title": "Performance Test",
+      "path": "usage/performance/performance"
+    },
+    {
+      "title": "Appendix",
+      "collapsed": true,
+      "children": [
+        {
+          "title": "Data Type Description",
+          "path": "appendix/data-type"
+        },
+        {
+          "title": "Industrial Protocol Introduction",
+          "children": [
+            {
+              "title": "Modbus TCP",
+              "path": "appendix/protocol/modbus_tcp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

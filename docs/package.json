@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "vitepress": "^2.0.0-alpha.15"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:deploy": "gh-pages -d .vitepress/dist -b gh-pages",
+    "docs:preview": "vitepress preview"
+  }
+}
